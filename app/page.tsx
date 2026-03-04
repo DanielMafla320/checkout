@@ -1,65 +1,188 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+
+interface Product {
+  id: number;
+  name: string;
+  color: string;
+  quantity: number;
+  price: number;
+  image: string;
+  ref: string;
+}
+
+export default function Page() {
+  const [products, setProducts] = useState<Product[]>([
+    {
+      id: 1,
+      name: "Denim T-Shirt",
+      color: "Blue",
+      quantity: 2,
+      price: 7500,
+      image: "https://via.placeholder.com/60x60?text=T-Shirt",
+      ref: "007197456",
+    },
+    {
+      id: 2,
+      name: "Denim Pants",
+      color: "Blue",
+      quantity: 3,
+      price: 9000,
+      image: "https://via.placeholder.com/60x60?text=Pants",
+      ref: "011015233",
+    },
+    {
+      id: 3,
+      name: "Sony Smartwatch",
+      color: "Black",
+      quantity: 1,
+      price: 24500,
+      image: "https://via.placeholder.com/60x60?text=Watch",
+      ref: "004822981",
+    },
+    {
+      id: 4,
+      name: "Cognac Oxford",
+      color: "Brown",
+      quantity: 1,
+      price: 4500,
+      image: "https://via.placeholder.com/60x60?text=Shoes",
+      ref: "035772962",
+    },
+  ]);
+
+  const subtotal = products.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gray-100 flex relative overflow-hidden">
+      {/* Left side - Cart */}
+      <div
+        className={`bg-white rounded-md p-6 shadow-md transition-all duration-300 ease-in-out
+          ${isOpen ? "w-[calc(100%-20rem)]" : "w-full"}
+        `}
+        style={{ flexShrink: 0 }}
+      >
+        <h2 className="text-xl font-semibold mb-6">Your Shopping Cart</h2>
+
+        <div className="flex flex-col gap-4">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="flex items-center justify-between bg-gray-50 p-4 rounded"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              <div className="flex items-center gap-4">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-semibold">{product.name}</p>
+                  <p className="text-xs text-gray-400">Ref. {product.ref}</p>
+                </div>
+              </div>
+
+              <p className="text-gray-600">{product.color}</p>
+
+              <div className="flex items-center gap-2">
+                <button className="bg-gray-300 rounded px-2">-</button>
+                <span>{product.quantity}</span>
+                <button className="bg-gray-300 rounded px-2">+</button>
+              </div>
+
+              <p className="font-semibold">
+                {(product.price * product.quantity).toLocaleString()} NGN
+              </p>
+
+              <button className="text-gray-400 hover:text-red-500 font-bold">
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 flex justify-between items-center font-semibold">
+          <button className="text-gray-500 hover:text-gray-900 flex items-center gap-1">
+            ← Back to Shop
+          </button>
+          <p>
+            Subtotal:{" "}
+            <span className="font-bold">{subtotal.toLocaleString()} NGN</span>
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </div>
+
+      {/* WRAPPER PANEL + BOTÓN */}
+      <div
+        className={`fixed top-0 right-0 h-full flex transition-transform duration-300 ease-in-out
+          ${isOpen ? "translate-x-0" : "translate-x-[20rem]"}
+        `}
+      >
+        {/* Botón (siempre visible) */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="h-24 self-center bg-gray-900 border border-yellow-400 rounded-l-full w-8 flex flex-col justify-center items-center gap-1 cursor-pointer z-50"
+          aria-label={isOpen ? "Cerrar panel de tarjeta" : "Abrir panel de tarjeta"}
+          title={isOpen ? "Cerrar" : "Abrir"}
+        >
+          <span className="block w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+          <span className="block w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+          <span className="block w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+        </button>
+
+        {/* Panel derecho */}
+        <div className="h-full w-80 bg-gray-900 text-yellow-400 p-6 shadow-lg flex flex-col gap-6">
+          <h3 className="text-2xl font-semibold mb-4">Card Details</h3>
+
+          <div>
+            <p className="mb-2">Select Card Type</p>
+            <div className="flex gap-4 items-center">
+              <button className="bg-yellow-400 rounded-full w-10 h-6"></button>
+              <button className="opacity-50">VISA</button>
+              <button className="opacity-50">Verve</button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block mb-1">Card Number</label>
+            <input
+              type="text"
+              placeholder="xxxx xxxx xxxx xxxx"
+              className="w-full rounded bg-gray-700 text-yellow-400 p-2 placeholder-yellow-600"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block mb-1">Expiry Date</label>
+              <input
+                type="text"
+                placeholder="MM / YY"
+                className="w-full rounded bg-gray-700 text-yellow-400 p-2 placeholder-yellow-600"
+              />
+            </div>
+
+            <div className="flex-1">
+              <label className="block mb-1">CW</label>
+              <input
+                type="password"
+                placeholder="•••"
+                className="w-full rounded bg-gray-700 text-yellow-400 p-2 placeholder-yellow-600"
+              />
+            </div>
+          </div>
+
+          <button className="mt-auto bg-yellow-400 text-gray-900 font-bold py-3 rounded hover:bg-yellow-300">
+            Checkout
+          </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
