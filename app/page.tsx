@@ -91,10 +91,22 @@ export default function Page() {
               <p className="text-gray-600">{product.color}</p>
 
               <div className="flex items-center gap-2">
-                <button className="bg-gray-300 rounded px-2">-</button>
-                <span>{product.quantity}</span>
-                <button className="bg-gray-300 rounded px-2">+</button>
-              </div>
+  {/* Número a la izquierda */}
+  <span className="text-sm font-medium w-4 text-center">
+    {product.quantity}
+  </span>
+
+  {/* + y - en columna */}
+  <div className="flex flex-col gap-1">
+    <button className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-sm hover:bg-gray-400 transition">
+      +
+    </button>
+
+    <button className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-sm hover:bg-gray-400 transition">
+      -
+    </button>
+  </div>
+</div>
 
               <p className="font-semibold">
                 {(product.price * product.quantity).toLocaleString()} NGN
@@ -149,40 +161,48 @@ export default function Page() {
             </div>
           </div>
 
-          <div>
-            <label className="block mb-1">Card Number</label>
-            <input
-              type="text"
-              placeholder="xxxx xxxx xxxx xxxx"
-              className="w-full rounded bg-gray-700 text-yellow-400 p-2 placeholder-yellow-600"
-            />
+          {/* Card Number */}
+          <div className="flex flex-col gap-1">
+          <label className="text-sm tracking-wide text-yellow-400">
+          Card Number
+          </label>
+          <input
+            type="text"
+            placeholder="1234 5678 9012 3456"
+            className="bg-transparent border-b border-white/50 focus:border-yellow-400 outline-none py-2 text-white placeholder-white/40"
+          />
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block mb-1">Expiry Date</label>
-              <input
-                type="text"
-                placeholder="MM / YY"
-                className="w-full rounded bg-gray-700 text-yellow-400 p-2 placeholder-yellow-600"
-              />
-            </div>
-
-            <div className="flex-1">
-              <label className="block mb-1">CW</label>
-              <input
-                type="password"
-                placeholder="•••"
-                className="w-full rounded bg-gray-700 text-yellow-400 p-2 placeholder-yellow-600"
-              />
-            </div>
+          {/* Expiry + CW */}
+          <div className="flex gap-6 mt-4">
+          <div className="flex-1 flex flex-col gap-1">
+          <label className="text-sm tracking-wide text-yellow-400">
+          Expiry Date
+          </label>
+          <input
+            type="text"
+            placeholder="MM / YY"
+            className="bg-transparent border-b border-white/50 focus:border-yellow-400 outline-none py-2 text-white placeholder-white/40"
+          />
           </div>
+
+          <div className="w-20 flex flex-col gap-1">
+            <label className="text-sm tracking-wide text-yellow-400">
+            CVV
+            </label>
+          <input
+          type="password"
+          placeholder="***"
+          className="bg-transparent border-b border-white/50 focus:border-yellow-400 outline-none py-2 text-white placeholder-white/40"
+          />
+        </div>
+        </div>
 
           <button className="mt-auto bg-yellow-400 text-gray-900 font-bold py-3 rounded hover:bg-yellow-300">
             Checkout
           </button>
         </div>
       </div>
-    </div>
+      </div>
   );
 }
